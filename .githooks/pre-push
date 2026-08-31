@@ -1,0 +1,20 @@
+#!/bin/sh
+# Refuse to push while work is parked in a stash.
+#
+# Git already blocks a fully empty commit, so `commit && push` short-circuits on
+# its own. What it does not block is a PARTIALLY empty commit: some edits in the
+# working tree, the rest in a stash, a commit that succeeds, and a push that
+# quietly ships an incomplete change.
+#
+# Enable: git config core.hooksPath .githooks
+# Override: git push --no-verify
+if [ -n "$(git stash list 2>/dev/null)" ]; then
+  echo "pre-push: refusing -- work is parked in a stash:" >&2
+  git stash list | sed 's/^/  /' >&2
+  echo "" >&2
+  echo "  A clean working tree does not mean your edits are committed." >&2
+  echo "  Note: 'git stash -u' also swallows untracked files." >&2
+  echo "  Check the stash, then: git push --no-verify to override." >&2
+  exit 1
+fi
+exit 0
