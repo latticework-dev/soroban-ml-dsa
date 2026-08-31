@@ -60,5 +60,10 @@ deterministic and reproducible.
 `contract/Cargo.toml` and `account/Cargo.toml` set `opt-level = 3`.
 This is load-bearing: `opt-level = "z"` (the common Soroban default) costs
 **2.69x more CPU** on-network for the same verification, and 2.01x the fee.
+
+> Superseded. This is the phase-0 measurement and is kept as the historical
+> record. The Milestone 4 re-measurement on deployed contracts gives **2.64x**;
+> that is the figure to cite. See `BENCHMARK.md` and
+> `writeups/opt-level-and-lattice-crypto-on-soroban.md`.
 See [`../BENCHMARK.md`](../BENCHMARK.md) and the standalone write-up
 [`../writeups/opt-level-and-lattice-crypto-on-soroban.md`](../writeups/opt-level-and-lattice-crypto-on-soroban.md).

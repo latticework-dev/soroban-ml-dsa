@@ -10,6 +10,55 @@ VM/ledger overhead.
 
 Reproduce: `cargo run --release --bin bench -- <SOURCE_G...> <VERIFIER_C...>`
 
+---
+
+> ## ⚠️ Protocol 28: these figures are protocol 27, and testnet has moved on
+>
+> **Dated note, 31 August 2026.**
+>
+> Every figure in this document was measured on **19 August 2026 against testnet
+> running protocol 27**. **Testnet upgraded to protocol 28 on 27 August 2026**
+> ([upgrade guide](https://stellar.org/blog/developers/adapter-protocol-28-upgrade-guide)).
+> **Mainnet is still protocol 27** and is scheduled to upgrade on
+> **16 September 2026**.
+>
+> **So if you run `./demo.sh` or the bench today, you will get different numbers
+> than the tables below.** That is expected, and this note exists so you find our
+> account of it rather than an unexplained discrepancy.
+>
+> **What changed.** A fixed VM-instantiation cost of ~2.14M instructions went
+> away. Confirmed against the *same unchanged deployed contract*
+> (`CCH655J7…`), so this is the network and not a rebuild:
+>
+> | | protocol 27 (published) | protocol 28 (measured 31 Aug) |
+> |---|---|---|
+> | no-op (VM instantiation) | 2,515,683 | 376,665 |
+> | Ed25519 host fn | 2,963,805 | 807,552 |
+> | ML-DSA-44 verify | 51,025,589 (12.8%) | 48,849,638 (12.2%) |
+> | ML-DSA-65 verify | 77,519,116 (19.4%) | 75,343,165 (18.8%) |
+> | Ed25519 per ledger | ~390 | ~1,436 |
+> | ML-DSA-65 per ledger | 14 | 14 |
+> | ML-DSA-65 ÷ Ed25519, net of baseline | 167× | 174× |
+>
+> **What did not change.** Net of the VM baseline, the cost of the cryptography
+> itself is the same to within 0.05%. ML-DSA-65 still admits **14 verifications
+> per ledger** — the binding constraint, and the finding this document exists to
+> report, is unaffected.
+>
+> **One consequence worth stating plainly:** because the cheap Ed25519 baseline
+> fell by roughly three quarters while ML-DSA did not, the per-ledger gap between
+> them *widens* from ~28× to ~103×. Our published comparison understated it.
+>
+> The protocol 28 [upgrade guide](https://stellar.org/blog/developers/adapter-protocol-28-upgrade-guide)
+> documents CAP-83, CAP-85 and CAP-86 and says nothing about cost-model or
+> metering changes, so we report this as measured without attributing a cause.
+>
+> **A full re-measurement is scheduled once mainnet upgrades on 16 September
+> 2026**, after which every figure here will be relabelled protocol 28. We are
+> deliberately measuring once rather than twice.
+
+---
+
 | Deployed | Address |
 |---|---|
 | `pq-verifier` | `CCH655J7I7WCNF2SAR4BKY6QAMP45UMYHAFXLMNFJ7NJUXI5LGGQB2GY` |

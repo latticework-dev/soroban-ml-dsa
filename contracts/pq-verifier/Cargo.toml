@@ -14,7 +14,7 @@ soroban-sdk = "27.0.6"
 pq-core = { path = "../../crates/pq-core" }
 
 [profile.release]
-# See writeups/opt-level-and-lattice-crypto-on-soroban.md -- "z" costs 2.69x CPU.
+# See writeups/opt-level-and-lattice-crypto-on-soroban.md -- "z" costs 2.64x CPU.
 opt-level = 3
 lto = true
 codegen-units = 1
